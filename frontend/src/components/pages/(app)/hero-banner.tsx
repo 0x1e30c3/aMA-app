@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { PiPlantFill } from "react-icons/pi";
+import { PiPlantFill, PiLockKeyFill, PiLockKey } from "react-icons/pi";
 import { formatEther } from "viem";
 import { useStETHBalance, useTreasuryRead } from "@/hooks/use-treasury";
 import { useLidoApr } from "@/hooks/use-lido-apr";
+import { USE_CONFIDENTIAL } from "@/config/contracts";
 
 function formatETH(value: string): string {
   const num = Number.parseFloat(value || "0");

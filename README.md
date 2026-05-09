@@ -6,10 +6,12 @@
 **Yield-bearing operating budget for AI agents, powered by Lido stETH.**
 **Humans deposit, principal stays locked, agents spend only from yield.**
 
-[![Live Demo](https://img.shields.io/badge/Live-aMA.vercel.app-000)](https://aMA.vercel.app)
-[![Demo Video](https://img.shields.io/badge/Demo-YouTube-red)](https://youtu.be/d9FQcwvv_bo)
+**Now with FHE Privacy** — Zama Protocol integration for confidential onchain finances.
+
 [![Ethereum](https://img.shields.io/badge/Ethereum-Mainnet-blue)](https://etherscan.io)
+[![Ethereum Sepolia](https://img.shields.io/badge/Sepolia-Testnet-orange)](https://sepolia.etherscan.io)
 [![Lido](https://img.shields.io/badge/Lido-stETH-00A3FF)](https://lido.fi)
+[![Zama FHE](https://img.shields.io/badge/Zama-FHE-6B46C1)](https://zama.ai)
 [![Chainlink](https://img.shields.io/badge/Chainlink-ETH%2FUSD-375BD2)](https://data.chain.link)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 
@@ -22,6 +24,8 @@
 AI agents need operating budgets to pay for API calls, compute, and services. But giving an agent direct access to funds is risky — one bug or exploit and the treasury is drained.
 
 **aMA** solves this by using Lido stETH staking yield as the agent's budget source. Humans deposit ETH, which gets staked via Lido and wrapped to wstETH. The principal is **structurally locked** in the smart contract — no function exists for the agent to access it. Only the **yield** (staking rewards, ~2.4% APR) flows into the agent's spendable balance.
+
+**New: Confidential Version** — Now powered by [Zama Protocol](https://zama.ai) with Fully Homomorphic Encryption (FHE). All treasury data (balances, yield, spending) remains encrypted onchain while still computable.
 
 All spending is enforced onchain: recipient whitelists, per-transaction caps, cycle rate limits, and per-agent budgets.
 
@@ -95,12 +99,90 @@ Interactive CLI agent reads treasury state from smart contract, verifies yield o
 
 | Feature | Description |
 |---------|-------------|
-| Fully Onchain | All deposits, permissions, and spending recorded on Ethereum Mainnet |
+| Fully OnChain | All deposits, permissions, and spending recorded on Ethereum Mainnet |
 | Lido Integration | Real stETH/wstETH staking via Lido — no mocks |
 | Multi-Agent | Parent agent + sub-agents with individual budget caps |
 | AI Chat | Pay per request via x402 (Claude, ChatGPT, Gemini, Perplexity) |
 | Live Data | ETH price from Chainlink, APR from Lido API, balances from ERC20 |
 | Permission Controls | Whitelist toggle, per-tx cap, cycle rate limit — owner configurable |
+| **FHE Privacy (NEW)** | Zama Protocol integration — encrypted balances, yield, and transactions |
+
+---
+
+## Confidential Version (Zama FHE)
+
+The confidential version uses **Zama Protocol's Fully Homomorphic Encryption (FHE)** to keep all financial data private onchain.
+
+### What Stays Encrypted
+
+- Principal (wstETH deposits) — encrypted as `euint64`
+- Available Yield — encrypted as `euint64`
+- Total Spent — encrypted as `euint64`
+- User Balances — encrypted mapping
+
+### Access Control
+
+- **Owner** can decrypt their principal balance and total spent
+- **Agent** can decrypt available yield for spending
+- **Public** sees only encrypted handles (bytes32)
+
+### Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| Encryption | Zama FHEVM (Fully Homomorphic Encryption) |
+| Smart Contracts | Solidity + @fhevm/solidity |
+| Frontend SDK | @zama-fhe/sdk, @zama-fhe/react-sdk |
+| Network | Ethereum Sepolia (testnet) |
+
+### Confidential Contract
+
+```solidity
+// SPDX-License-Identifier: BSD-3-Clause-Clear
+pragma solidity ^0.8.24;
+
+import {FHE, euint64} from "@fhevm/solidity/lib/FHE.sol";
+import {ZamaEthereumConfig} from "@fhevm/solidity/config/ZamaConfig.sol";
+
+contract ConfidentialAgentTreasury is ZamaEthereumConfig {
+    euint64 public principalWstETH;    // Encrypted principal
+    euint64 public availableYield;      // Encrypted yield
+    euint64 public totalSpentWstETH;    // Encrypted total spent
+    mapping(address => euint64) public encryptedBalances; // Encrypted user balances
+    
+    // Grant decryption permission to user
+    function grantAccessToBalance() external {
+        FHE.allow(encryptedBalances[msg.sender], msg.sender);
+    }
+}
+```
+
+### Deployment (Sepolia)
+
+| Contract | Address |
+|----------|---------|
+| ConfidentialAgentTreasury | [`0xc5D56f02c1DaE4f13b2A6a00C2ef3C8E63f4B6F6`](https://sepolia.etherscan.io/address/0xc5D56f02c1DaE4f13b2A6a00C2ef3C8E63f4B6F6) |
+
+### Quick Start (Confidential)
+
+```bash
+# Clone Zama templates
+git clone https://github.com/zama-ai/fhevm-hardhat-template.git packages/contracts
+git clone --recursive https://github.com/zama-ai/fhevm-react-template.git packages/frontend
+
+# Deploy contract
+cd packages/contracts
+npm install
+npx hardhat deploy --network sepolia
+
+# Run frontend
+cd packages/frontend/packages/nextjs
+pnpm dev
+```
+
+---
+
+For the original Lido-based version documentation, see the [Legacy](./brainstorm/) folder.
 
 ---
 
@@ -193,11 +275,31 @@ stateDiagram-v2
 
 | Folder | Purpose |
 |--------|---------|
-| `frontend/` | Next.js 16 frontend with wagmi, RainbowKit, Tailwind CSS 4 |
-| `contracts/` | Solidity smart contracts (Foundry), interfaces, tests, deploy script |
-| `brainstorm/` | Architecture docs, flow, smart contract spec, contract addresses |
-| `conversation-log/` | Human-agent collaboration log, contribution breakdown |
-| `skills/` | AI agent skill documentation (SKILL.md) |
+| `frontend/` | Original Next.js 16 frontend (Lido-based) |
+| `contracts/` | Original Solidity contracts (Foundry) |
+| `packages/contracts/` | **NEW** Zama FHE confidential contracts (Hardhat) |
+| `packages/frontend/` | **NEW** Zama FHE frontend template (Next.js + Wagmi) |
+| `brainstorm/` | Original architecture docs, flow, smart contract spec |
+| `conversation-log/` | Human-agent collaboration log |
+| `skills/` | AI agent skill documentation |
+
+---
+
+## Deployed Contracts
+
+### Original (Ethereum Mainnet)
+
+| Contract | Address | Verified |
+|----------|---------|----------|
+| AgentTreasury | [`0x783e1512bFEa7C8B51A92cB150FEb5A04b91E9Aa`](https://etherscan.io/address/0x783e1512bFEa7C8B51A92cB150FEb5A04b91E9Aa) | Yes |
+| Lido stETH | [`0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84`](https://etherscan.io/address/0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84) | Yes |
+| wstETH | [`0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0`](https://etherscan.io/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) | Yes |
+
+### Confidential (Ethereum Sepolia)
+
+| Contract | Address |
+|----------|---------|
+| ConfidentialAgentTreasury | [`0xc5D56f02c1DaE4f13b2A6a00C2ef3C8E63f4B6F6`](https://sepolia.etherscan.io/address/0xc5D56f02c1DaE4f13b2A6a00C2ef3C8E63f4B6F6) |
 
 ---
 

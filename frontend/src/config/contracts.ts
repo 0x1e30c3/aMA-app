@@ -1,3 +1,4 @@
+// Original (Ethereum Mainnet)
 export const AGENT_TREASURY_ADDRESS =
   "0x783e1512bFEa7C8B51A92cB150FEb5A04b91E9Aa" as const;
 
@@ -6,6 +7,19 @@ export const LIDO_STETH_ADDRESS =
 
 export const WSTETH_ADDRESS =
   "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0" as const;
+
+// Confidential (Ethereum Sepolia - Zama FHE)
+export const CONFIDENTIAL_TREASURY_ADDRESS =
+  "0xc5D56f02c1DaE4f13b2A6a00C2ef3C8E63f4B6F6" as const;
+
+export const CONFIDENTIAL_LIDO_ADDRESS =
+  "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0" as const; // wstETH on Sepolia
+
+export const CONFIDENTIAL_WSTETH_ADDRESS =
+  "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0" as const;
+
+// Toggle between original and confidential
+export const USE_CONFIDENTIAL = true;
 
 export const agentTreasuryAbi = [
   {
