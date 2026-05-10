@@ -19,10 +19,11 @@ export function Header() {
       <div className="flex items-center gap-8">
         <Link href="/" className="flex items-center gap-3">
           <Image
-            src="/Assets/Images/Logo/aMA-logo.webp"
+            src="/Assets/Images/Logo/logo-transparent.png"
             alt="aMA"
-            width={28}
-            height={28}
+            width={32}
+            height={32}
+            className="rounded-lg"
           />
           <span className="text-base font-semibold text-text-main">aMA</span>
         </Link>
