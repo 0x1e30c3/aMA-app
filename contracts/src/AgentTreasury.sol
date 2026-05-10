@@ -129,7 +129,7 @@ contract AgentTreasury is ReentrancyGuard {
         _recordDeposit(amount);
     }
 
-    /// @notice Deposit ETH — auto-stakes via Lido then wraps to wstETH. Anyone can deposit.
+    /// @notice Deposit ETH — auto-stakes via aMA then wraps to wstETH. Anyone can deposit.
     function depositETH() external payable nonReentrant {
         if (msg.value == 0) revert ZeroAmount();
 
