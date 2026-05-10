@@ -87,7 +87,7 @@ function StakeForm() {
         </div>
       </div>
 
-      <div className="my-3 flex items-center gap-1 px-2 text-xs text-text-secondary">1 ETH = 1.0000 stETH (via Lido <Image src="/Assets/Images/Logo/lido-dao-ldo-logo.svg" alt="Lido" width={12} height={12} className="inline rounded-full" />)</div>
+      <div className="my-3 flex items-center gap-1 px-2 text-xs text-text-secondary">1 ETH = 1.0000 stETH (via aMA <Image src="/Assets/Images/Logo/lido-dao-ldo-logo.svg" alt="Lido" width={12} height={12} className="inline rounded-full" />)</div>
 
       <div className="rounded-xl bg-main-bg p-4">
         <div className="flex items-center justify-between">
@@ -283,7 +283,7 @@ export function StakePanel() {
           <div className="absolute inset-0 bg-brand/10" />
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2">
             <span className="flex items-center gap-1.5 rounded-full bg-white/80 px-4 py-1.5 text-xs font-medium text-gray-600 backdrop-blur-sm">
-              Powered by Lido Finance <Image src="/Assets/Images/Logo/lido-dao-ldo-logo.svg" alt="Lido" width={16} height={16} />
+              Powered by aMA Apps <Image src="/Assets/Images/Logo/lido-dao-ldo-logo.svg" alt="Lido" width={16} height={16} />
             </span>
           </div>
         </div>
@@ -293,7 +293,7 @@ export function StakePanel() {
           <div className="mt-4 space-y-3">
             {mode === "stake" ? (
               <>
-                <StepRow num={1} label="Stake ETH via Lido" right={<EtherscanLink address={LIDO_STETH_ADDRESS} label="0xae7a...fE84" />} />
+                <StepRow num={1} label="Stake ETH via aMA" right={<EtherscanLink address={LIDO_STETH_ADDRESS} label="0xae7a...fE84" />} />
                 <StepRow num={2} label="Receive stETH" right={<div className="flex items-center gap-1"><span className="text-xs text-text-secondary">{aprLabel}</span><Image src="/Assets/Images/Logo/stETH-logo.svg" alt="stETH" width={14} height={14} /></div>} />
               </>
             ) : (
@@ -308,7 +308,7 @@ export function StakePanel() {
               <div className="rounded-full border border-border-main bg-surface px-4 py-2">
                 <div className="flex items-center gap-2">
                   <Image src="/Assets/Images/Logo/wstETH-logo.png" alt="wstETH" width={14} height={14} className="rounded-full" />
-                  <span className="text-xs font-medium text-text-main">Lido Staking</span>
+                  <span className="text-xs font-medium text-text-main">aMA Staking</span>
                 </div>
                 <p className="mt-0.5 text-center text-[10px] text-text-secondary">{aprLabel}</p>
               </div>
