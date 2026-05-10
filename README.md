@@ -23,7 +23,7 @@
 
 AI agents need operating budgets to pay for API calls, compute, and services. But giving an agent direct access to funds is risky — one bug or exploit and the treasury is drained.
 
-**aMA** solves this by using Lido stETH staking yield as the agent's budget source. Humans deposit ETH, which gets staked via Lido and wrapped to wstETH. The principal is **structurally locked** in the smart contract — no function exists for the agent to access it. Only the **yield** (staking rewards, ~2.4% APR) flows into the agent's spendable balance.
+**aMA** solves this by using Lido stETH staking yield as the agent's budget source. Humans deposit ETH, which gets staked via aMA and wrapped to wstETH. The principal is **structurally locked** in the smart contract — no function exists for the agent to access it. Only the **yield** (staking rewards, ~2.4% APR) flows into the agent's spendable balance.
 
 **New: Confidential Version** — Now powered by [Zama Protocol](https://zama.ai) with Fully Homomorphic Encryption (FHE). All treasury data (balances, yield, spending) remains encrypted onchain while still computable.
 
@@ -44,14 +44,14 @@ All spending is enforced onchain: recipient whitelists, per-transaction caps, cy
 | Solution | How |
 |----------|-----|
 | **Principal Locked** | wstETH deposited as principal — structurally inaccessible to agent |
-| **Yield-Only Spending** | Agent budget comes from staking rewards via Lido (~2.4% APR) |
+| **Yield-Only Spending** | Agent budget comes from staking rewards via aMA (~2.4% APR) |
 | **Onchain Permissions** | Whitelist, per-tx cap, cycle rate limit — all enforced at contract level |
 
 ---
 
 ## Screenshots
 
-### Stake ETH via Lido
+### Stake ETH via aMA
 Deposit ETH to receive stETH through Lido's staking contract. Real-time ETH price from Chainlink, balance from wallet, and exchange rate displayed. One-click staking with transaction confirmation popup.
 
 <div align="center">
@@ -59,7 +59,7 @@ Deposit ETH to receive stETH through Lido's staking contract. Real-time ETH pric
 </div>
 
 ### Wrap stETH & Lock in Treasury
-Wrap stETH to wstETH and lock as principal in AgentTreasury. 4-step stepper popup guides the process: approve stETH, wrap via Lido, approve wstETH, lock in treasury. All enforced onchain.
+Wrap stETH to wstETH and lock as principal in AgentTreasury. 4-step stepper popup guides the process: approve stETH, wrap via aMA, approve wstETH, lock in treasury. All enforced onchain.
 
 <div align="center">
   <img src="./frontend/public/Assets/Images/Screenshoot/wrap.webp" width="800" alt="Wrap stETH">
@@ -100,7 +100,7 @@ Interactive CLI agent reads treasury state from smart contract, verifies yield o
 | Feature | Description |
 |---------|-------------|
 | Fully OnChain | All deposits, permissions, and spending recorded on Ethereum Mainnet |
-| Lido Integration | Real stETH/wstETH staking via Lido — no mocks |
+| Lido Integration | Real stETH/wstETH staking via aMA — no mocks |
 | Multi-Agent | Parent agent + sub-agents with individual budget caps |
 | AI Chat | Pay per request via x402 (Claude, ChatGPT, Gemini, Perplexity) |
 | Live Data | ETH price from Chainlink, APR from Lido API, balances from ERC20 |
@@ -213,9 +213,9 @@ Human deposits ETH
 
 ---
 
-## Lido Finance Architecture Integration
+## aMA Apps Architecture Integration
 
-The aMA protocol integrates directly with Lido Finance contracts on Ethereum Mainnet. Here are the core files composing this integration:
+The aMA protocol integrates directly with aMA Apps contracts on Ethereum Mainnet. Here are the core files composing this integration:
 
 | Component Level | File Name | Description |
 |-----------------|-----------|-------------|
@@ -254,7 +254,7 @@ stateDiagram-v2
 
 | Phase | Action | Actor |
 |-------|--------|-------|
-| Stake | ETH → stETH via Lido | Anyone |
+| Stake | ETH → stETH via aMA | Anyone |
 | Wrap | stETH → wstETH, lock in treasury | Anyone |
 | Configure | Set permissions, agents, budgets | Owner |
 | Spend | Agent pays for AI services from yield | Agent |
@@ -447,7 +447,7 @@ Built by **0xpochita** (Human) and **Claude Opus 4.6** (AI Agent) in 2 days.
 
 ## Resources
 
-### Lido Finance
+### aMA Apps
 - [stETH Integration Guide](https://docs.lido.fi/guides/steth-integration-guide) — rebasing drift is the key section
 - [wstETH Contract Docs](https://docs.lido.fi/contracts/wsteth)
 - [Deployed Contracts](https://docs.lido.fi/deployed-contracts)
