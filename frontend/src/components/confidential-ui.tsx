@@ -38,7 +38,7 @@ export function ConfidentialBadge() {
   );
 }
 
-export function EncryptedValueDisplay({ value, label }: { value?: string; label: string }) {
+export function EncryptedValueDisplay({ value, label }: { value?: string | bigint; label: string }) {
   const { mode } = useConfidentialDemo();
 
   if (!value) {
@@ -49,19 +49,22 @@ export function EncryptedValueDisplay({ value, label }: { value?: string; label:
     );
   }
 
+  const displayValue = typeof value === 'bigint' ? value.toString() : value;
+
   if (mode === "decrypted") {
     return (
       <div className="font-mono text-sm font-semibold text-text-main">
-        {value}
+        {displayValue}
       </div>
     );
   }
 
   // Encrypted mode - show truncated handle
+  const strValue = String(displayValue);
   return (
     <div className="flex flex-col">
       <span className="font-mono text-xs text-brand">
-        {value.slice(0, 18)}...{value.slice(-8)}
+        {strValue.slice(0, 18)}...{strValue.slice(-8)}
       </span>
       <span className="text-[10px] text-slate-400">(encrypted)</span>
     </div>
